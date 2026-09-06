@@ -23,7 +23,9 @@ public class ItemSetup {
         large_titanite_shard = create("large_titanite_shard", LargeTitaniteShardItem::new),
         titanite_chunk = create("titanite_chunk", TitaniteChunkItem::new),
         titanite_slab = create("titanite_slab", TitaniteSlabItem::new),
-        undead_bone_shard = create("undead_bone_shard", UndeadBoneShardItem::new);
+        undead_bone_shard = create("undead_bone_shard", UndeadBoneShardItem::new),
+        skint_little = create("skint_little", SkintLittleItem::new),
+        dream_skint = create("dream_skint", () -> new DreamSkint(new Item.Properties()));
 
 
     public static <T extends Item> DeferredItem<T> create(String name, Supplier<? extends T> item) {
