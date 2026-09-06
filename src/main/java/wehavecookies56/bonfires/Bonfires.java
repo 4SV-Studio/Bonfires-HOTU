@@ -1,6 +1,7 @@
 package wehavecookies56.bonfires;
 
 import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -15,11 +16,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
@@ -35,6 +39,7 @@ import org.apache.logging.log4j.Logger;
 import wehavecookies56.bonfires.advancements.BonfireLitTrigger;
 import wehavecookies56.bonfires.bonfire.Bonfire;
 import wehavecookies56.bonfires.bonfire.BonfireRegistry;
+import wehavecookies56.bonfires.client.tiles.SkintDownRenderer;
 import wehavecookies56.bonfires.data.BonfireHandler;
 import wehavecookies56.bonfires.data.DiscoveryHandler;
 import wehavecookies56.bonfires.data.EstusHandler;
@@ -184,4 +189,13 @@ public class Bonfires {
             buf.writeNbt(owners);
         }
     };
+
+    @SuppressWarnings("removal")
+    @EventBusSubscriber(modid = modid, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class ClientModEvents {
+        @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            BlockEntityRenderers.register(EntitySetup.BONFIRE.get(), SkintDownRenderer::new);
+        }
+    }
 }
