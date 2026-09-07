@@ -378,7 +378,8 @@ public class SkintDownBlock extends Block implements EntityBlock, GeoBlockEntity
             } else if (te.isLit()) {
                 Bonfire bonfire = BonfireHandler.getServerHandler(ServerLifecycleHooks.getCurrentServer()).getRegistry().getBonfire(te.getID());
                 if (bonfire != null) {
-                    stack.set(ComponentSetup.BONFIRE_DATA, new BonfireData(bonfire.getName(), !bonfire.isPublic()));
+                    String name = bonfire.getName() != null ? bonfire.getName() : "";
+                    stack.set(ComponentSetup.BONFIRE_DATA, new BonfireData(name, !bonfire.isPublic()));
                 }
             } else if (te.hasUnlitName()) {
                 stack.set(ComponentSetup.BONFIRE_DATA, new BonfireData(te.getUnlitName(), te.isUnlitPrivate()));

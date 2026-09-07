@@ -27,7 +27,7 @@ public class CreativeTabSetup {
                     pOutput.accept(fullEstusFlask);
 
                     ItemStack stack = new ItemStack(BlockSetup.skint.get());
-                    stack.set(ComponentSetup.BONFIRE_DATA, new SkintDownBlock.BonfireData(null, false));
+                    stack.set(ComponentSetup.BONFIRE_DATA, new SkintDownBlock.BonfireData("", false));
                     stack.set(DataComponents.CUSTOM_NAME, Component.translatable(LocalStrings.TOOLTIP_UNLIT));
                     pOutput.accept(stack);
                 }).build()
