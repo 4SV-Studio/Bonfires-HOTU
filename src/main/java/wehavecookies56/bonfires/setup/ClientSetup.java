@@ -14,9 +14,10 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import wehavecookies56.bonfires.Bonfires;
-import wehavecookies56.bonfires.client.tiles.BonfireRenderer;
+import wehavecookies56.bonfires.client.tiles.SkintDownRenderer;
 import wehavecookies56.bonfires.data.ReinforceHandler;
 
+@SuppressWarnings("removal")
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
@@ -32,7 +33,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(EntitySetup.BONFIRE.get(), BonfireRenderer::new);
+        event.registerBlockEntityRenderer(EntitySetup.BONFIRE.get(), SkintDownRenderer::new);
     }
 
     public static class GameBusEvents {
