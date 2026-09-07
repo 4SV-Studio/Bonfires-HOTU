@@ -13,6 +13,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import wehavecookies56.bonfires.BonfiresConfig;
 import wehavecookies56.bonfires.LocalStrings;
 import wehavecookies56.bonfires.bonfire.Bonfire;
@@ -23,7 +27,8 @@ import java.time.Instant;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-public class BonfireTileEntity extends BlockEntity {
+public class BonfireTileEntity extends BlockEntity implements GeoBlockEntity {
+    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
     private boolean bonfire = false;
     private boolean lit = false;
@@ -33,6 +38,30 @@ public class BonfireTileEntity extends BlockEntity {
 
     private boolean unlitPrivate = false;
     private String unlitName;
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
+    }
+
+    private PlayState predicate(AnimationState<BonfireTileEntity> bonfireTileEntityAnimationState) {
+        if (this.isLit()) {
+            if (!bonfireTileEntityAnimationState.getController().getAnimationState().equals(AnimationController.State.RUNNING) &&
+                    !bonfireTileEntityAnimationState.getController().getAnimationState().equals(AnimationController.State.PAUSED)) {
+                bonfireTileEntityAnimationState.getController().forceAnimationReset();
+                bonfireTileEntityAnimationState.getController().setAnimation(
+                        RawAnimation.begin().then("clear", Animation.LoopType.HOLD_ON_LAST_FRAME)
+                );
+            }
+        }
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
     public enum BonfireType {
         BONFIRE, PRIMAL, NONE;
 
