@@ -1,5 +1,6 @@
 package wehavecookies56.bonfires.client.gui;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -21,6 +22,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.text.WordUtils;
+import org.lwjgl.glfw.GLFW;
 import wehavecookies56.bonfires.Bonfires;
 import wehavecookies56.bonfires.BonfiresConfig;
 import wehavecookies56.bonfires.LocalStrings;
@@ -31,6 +33,7 @@ import wehavecookies56.bonfires.client.gui.widgets.BonfireButton;
 import wehavecookies56.bonfires.client.gui.widgets.BonfireCustomButton;
 import wehavecookies56.bonfires.client.gui.widgets.BonfirePageButton;
 import wehavecookies56.bonfires.client.gui.widgets.DimensionTabButton;
+import wehavecookies56.bonfires.client.gui.widgets.DreamTeleport;
 import wehavecookies56.bonfires.packets.PacketHandler;
 import wehavecookies56.bonfires.packets.server.RequestDimensionsFromServer;
 import wehavecookies56.bonfires.packets.server.Travel;
@@ -61,6 +64,8 @@ public class BonfireScreen extends Screen {
     Button back;
     private Button next;
     private Button prev;
+    private Button skill;
+    private Button dreamteleport;
 
     public Map<ResourceKey<Level>, List<List<Bonfire>>> bonfires;
 
@@ -75,6 +80,7 @@ public class BonfireScreen extends Screen {
     private final int TRAVEL = 0;
     private final int LEAVE = 1;
     private final int REINFORCE = 20;
+    private final int SKILL = 23;
     @SuppressWarnings("unused")
     public final int BACK = 2;
     private final int NEXT = 3;
@@ -94,6 +100,7 @@ public class BonfireScreen extends Screen {
     private final int BONFIRE7 = 17;
     private final int BONFIRE_NEXT = 18;
     private final int BONFIRE_PREV = 19;
+    private final int DREAMTELEPORT = 24;
 
     private final int SCREENSHOT = 21;
     private final int INFO = 22;
@@ -107,6 +114,7 @@ public class BonfireScreen extends Screen {
     private BonfireButton[] bonfireButtons;
     private BonfirePageButton bonfire_next;
     private BonfirePageButton bonfire_prev;
+    private DreamTeleport dream_teleport;
 
     private final int tex_height = 166;
     private final int travel_width = 195;
@@ -120,7 +128,7 @@ public class BonfireScreen extends Screen {
 
     Screenshot screenshotImage;
 
-    boolean showInfo = true;
+    boolean showInfo = false;
 
     public BonfireScreen(BonfireTileEntity bonfire, Map<UUID, String> ownerNames, List<ResourceKey<Level>> dimensions, BonfireRegistry registry, boolean canReinforce) {
         super(Component.empty());
@@ -408,6 +416,12 @@ public class BonfireScreen extends Screen {
             case LEAVE:
                 onClose();
                 break;
+            case SKILL:
+                onClose();
+
+                simulateKeyPress(InputConstants.KEY_F25); // "-"
+                break;
+
             case NEXT:
                 if (currentPage != pages.size()-1) {
                     currentPage++;
@@ -469,12 +483,27 @@ public class BonfireScreen extends Screen {
             case REINFORCE:
                 minecraft.setScreen(new ReinforceScreen(this));
                 break;
+            case DREAMTELEPORT:
+                
+                break;
         }
         updateButtons();
         if (!closesScreen) {
             PacketHandler.sendToServer(new RequestDimensionsFromServer());
         }
     }
+
+    private void simulateKeyPress(int key) {
+        long windowHandle = Minecraft.getInstance().getWindow().getWindow();
+
+        InputConstants.Key inputKey = InputConstants.Type.KEYSYM.getOrCreate(key);
+
+        GLFW.glfwPostEmptyEvent();
+        Minecraft.getInstance().keyboardHandler.keyPress(windowHandle, inputKey.getValue(), 0, GLFW.GLFW_PRESS, 0);
+
+        Minecraft.getInstance().keyboardHandler.keyPress(windowHandle, inputKey.getValue(), 0, GLFW.GLFW_RELEASE, 0);
+    }
+
 
     public void loadBonfireScreenshot() {
         if (selectedInstance != null) {
@@ -563,6 +592,8 @@ public class BonfireScreen extends Screen {
             }
             reinforce.visible = false;
             leave.visible = false;
+            skill.visible = false;
+            //dreamteleport.visible = false;
             next.visible = true;
             prev.visible = true;
             bonfire_prev.visible = true;
@@ -585,10 +616,13 @@ public class BonfireScreen extends Screen {
                     travel.setY((height / 2) - (tex_height / 2) + 30);
                     reinforce.setY((height / 2) - (tex_height / 2) + 51);
                     leave.setY((height / 2) - (tex_height / 2) + 72);
+                    skill.setY((height / 2) - (tex_height / 2) + 72 + 21);
                 }
             }
             reinforce.visible = true;
             leave.visible = true;
+            skill.visible = true;
+            //dreamteleport.visible = false;
             next.visible = false;
             prev.visible = false;
             prev.active = false;
@@ -626,6 +660,7 @@ public class BonfireScreen extends Screen {
         addRenderableWidget(info = new BonfireCustomButton(INFO, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.INFO, button -> action(INFO)));
         addRenderableWidget(travel = Button.builder(Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 25).size(80, 20).build());
         addRenderableWidget(leave = Button.builder(Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62).size(80, 20).build());
+        addRenderableWidget(skill = Button.builder(Component.translatable(LocalStrings.BUTTON_SKILL), button -> action(SKILL, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62 + 21).size(80, 20).build());
         addRenderableWidget(reinforce = Button.builder(Component.translatable(LocalStrings.BUTTON_REINFORCE), button -> action(REINFORCE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 41).size(80, 20).build());
         addRenderableWidget(next = Button.builder(Component.literal(">"), button -> action(NEXT)).pos(0, 0).size(20, 20).build());
         addRenderableWidget(prev = Button.builder(Component.literal("<"), button -> action(PREV)).pos(20, 0).size(20, 20).build());
