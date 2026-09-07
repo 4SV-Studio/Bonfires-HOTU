@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("removal")
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class BonfiresDataGen {
 
@@ -46,18 +47,7 @@ public class BonfiresDataGen {
 
         @Override
         protected void generate() {
-            dropWhenSilkTouch(BlockSetup.ash_block.get());
-            add(BlockSetup.ash_block.get(), new LootTable.Builder().withPool(
-                    new LootPool.Builder()
-                            .setRolls(ConstantValue.exactly(1))
-                            .add(LootItem.lootTableItem(ItemSetup.ash_pile.get())
-                                    .apply(SetItemCountFunction.setCount(UniformGenerator.between(3, 6))))
-            ));
-            add(BlockSetup.ash_bone_pile.get(), new LootTable.Builder().withPool(
-                    new LootPool.Builder()
-                            .setRolls(ConstantValue.exactly(1))
-                            .add(LootItem.lootTableItem(BlockSetup.ash_bone_pile.get()))
-            ));
+
         }
 
         @Override

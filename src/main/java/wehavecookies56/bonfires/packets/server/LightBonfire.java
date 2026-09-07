@@ -12,7 +12,7 @@ import wehavecookies56.bonfires.Bonfires;
 import wehavecookies56.bonfires.BonfiresConfig;
 import wehavecookies56.bonfires.LocalStrings;
 import wehavecookies56.bonfires.advancements.BonfireLitTrigger;
-import wehavecookies56.bonfires.blocks.AshBonePileBlock;
+import wehavecookies56.bonfires.blocks.SkintDownBlock;
 import wehavecookies56.bonfires.data.DiscoveryHandler;
 import wehavecookies56.bonfires.data.EstusHandler;
 import wehavecookies56.bonfires.packets.Packet;
@@ -52,7 +52,7 @@ public record LightBonfire(String name, BlockPos bonfireTE, boolean isPublic, bo
                 UUID id = UUID.randomUUID();
                 te.createBonfire(name, id, player.getUUID(), isPublic);
                 te.setID(id);
-                player.level().setBlock(bonfireTE, player.level().getBlockState(bonfireTE).setValue(AshBonePileBlock.LIT, true), 2);
+                player.level().setBlock(bonfireTE, player.level().getBlockState(bonfireTE).setValue(SkintDownBlock.LIT, true), 2);
                 if (!BonfiresConfig.Common.disableBonfireRespawn) {
                     player.setRespawnPosition(te.getLevel().dimension(), te.getBlockPos(), player.getYRot(), false, true);
                 }

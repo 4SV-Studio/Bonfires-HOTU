@@ -24,7 +24,7 @@ public class ItemSetup {
         titanite_chunk = create("titanite_chunk", TitaniteChunkItem::new),
         titanite_slab = create("titanite_slab", TitaniteSlabItem::new),
         undead_bone_shard = create("undead_bone_shard", UndeadBoneShardItem::new),
-        skint_little = create("skint_little", SkintLittleItem::new),
+        skint_little = create("skint_little", () -> new Item(new Item.Properties())),
         dream_skint = create("dream_skint", () -> new DreamSkint(new Item.Properties()));
 
 

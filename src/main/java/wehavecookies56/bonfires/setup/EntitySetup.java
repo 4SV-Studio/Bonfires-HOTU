@@ -12,6 +12,6 @@ public class EntitySetup {
 
     public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Bonfires.modid);
 
-    public static final Supplier<BlockEntityType<BonfireTileEntity>> BONFIRE = TILE_ENTITIES.register("bonfire", () -> BlockEntityType.Builder.of(BonfireTileEntity::new, BlockSetup.ash_bone_pile.get()).build(null));
+    public static final Supplier<BlockEntityType<BonfireTileEntity>> BONFIRE = TILE_ENTITIES.register("bonfire", () -> BlockEntityType.Builder.of(BonfireTileEntity::new, BlockSetup.skint.get()).build(null));
 
 }
