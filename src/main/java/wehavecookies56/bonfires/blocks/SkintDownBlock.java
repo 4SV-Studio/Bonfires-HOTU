@@ -6,20 +6,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -54,6 +51,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 import wehavecookies56.bonfires.BonfiresConfig;
 import wehavecookies56.bonfires.LocalStrings;
 import wehavecookies56.bonfires.bonfire.Bonfire;
@@ -76,15 +80,16 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
-public class AshBonePileBlock extends Block implements EntityBlock {
+public class SkintDownBlock extends Block implements EntityBlock, GeoBlockEntity {
+    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = BooleanProperty.create("lit");
 
     public static final BooleanProperty EXPLODED = BooleanProperty.create("exploded");
 
-    public AshBonePileBlock() {
-        super(BlockBehaviour.Properties.of().sound(SoundType.SAND).noOcclusion().strength(0.8F).lightLevel(AshBonePileBlock::getLightValue));
+    public SkintDownBlock() {
+        super(Properties.of().sound(SoundType.AMETHYST).noOcclusion().strength(0.8F).lightLevel(SkintDownBlock::getLightValue));
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(LIT, false).setValue(EXPLODED, false));
     }
 
@@ -116,7 +121,7 @@ public class AshBonePileBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     private void repair(ItemStack stack) {
@@ -201,10 +206,11 @@ public class AshBonePileBlock extends Block implements EntityBlock {
                     return ItemInteractionResult.SUCCESS;
                 }
             } else {
-                if (stack != ItemStack.EMPTY) {
-                    if (stack.getItem() == ItemSetup.coiled_sword.get()) {
-                        placeItem(world, te, pos, player, hand, BonfireTileEntity.BonfireType.BONFIRE);
-                    }/*else if (player.getHeldItemMainhand().getItem() == Bonfires.coiledSwordFragment) {
+                //if (player.getItemInHand(hand) != ItemStack.EMPTY) {
+                if (player.getItemInHand(hand) == ItemStack.EMPTY) {
+                    //if (player.getItemInHand(hand).getItem() == ItemSetup.skint_up.get()) {
+                    placeItem(world, te, pos, player, hand, BonfireTileEntity.BonfireType.BONFIRE);
+                    /*}else if (player.getHeldItemMainhand().getItem() == Bonfires.coiledSwordFragment) {
                         placeItem(world, te, pos, playerIn, TileEntityBonfire.BonfireType.PRIMAL);
                     }*/
                     world.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
@@ -253,13 +259,12 @@ public class AshBonePileBlock extends Block implements EntityBlock {
         if (!world.isClientSide) {
             if (!player.isCreative())
                 player.setItemInHand(hand, ItemStack.EMPTY);
-            world.playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, 1);
             te.setBonfire(true);
             te.setLit(false);
             te.setBonfireType(type);
             PacketHandler.sendToAll(new SyncBonfire(te.isBonfire(), type, te.isLit(), null, te));
         } else {
-            world.playSound(player, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, 1);
+
         }
     }
 
@@ -314,7 +319,7 @@ public class AshBonePileBlock extends Block implements EntityBlock {
     public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
         if (BonfiresConfig.Common.enableUBSBonfire) {
             if (!world.isClientSide) {
-                ItemEntity shard = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemSetup.undead_bone_shard.get()));
+                ItemEntity shard = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemSetup.skint_little.get()));
                 world.addFreshEntity(shard);
                 state = state.setValue(EXPLODED, true);
                 world.setBlock(pos, state, 3);
@@ -330,8 +335,8 @@ public class AshBonePileBlock extends Block implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        VoxelShape base = Shapes.join(Block.box(3.0D, 0.0D, 3.0D, 13.0D, 1.0, 13.0D), Block.box(4.0D, 1.0D, 4.0D, 12.0D, 2.0, 12.0D), BooleanOp.OR);
-        VoxelShape sword = Block.box(5, 2, 5, 11, 20, 11);
+        VoxelShape base = Shapes.join(Block.box(2.0D, 0.0D, 2.0D, 14.0D, 8.0, 14.0D), Block.box(4.0D, 2.0D, 4.0D, 14.0D, 2.0, 14.0D), BooleanOp.OR);
+        VoxelShape sword = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 26.0, 14.0D);
         VoxelShape combined = Shapes.join(base, sword, BooleanOp.OR);
         if (world.getBlockEntity(pos) != null) {
             if (world.getBlockEntity(pos) instanceof BonfireTileEntity) {
@@ -359,21 +364,6 @@ public class AshBonePileBlock extends Block implements EntityBlock {
                 double d3 = 0.52D;
                 double d4 = random.nextDouble() * 0.6D - 0.3D;
                 double d5 = random.nextDouble() * 0.6D - 0.3D;
-
-                ResourceLocation sound = null;
-                if (!BonfiresConfig.Client.bonfireAmbientSound.isEmpty()) {
-                    sound = ResourceLocation.tryParse(BonfiresConfig.Client.bonfireAmbientSound);
-                }
-                if (sound != null) {
-                    if (random.nextDouble() < 0.1D) {
-                        world.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, SoundEvent.createVariableRangeEvent(sound), SoundSource.BLOCKS, 0.5F, 1.0F, false);
-                    }
-                }
-                //worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
-                if (!BonfiresConfig.Client.disableBonfireParticles) {
-                    world.addParticle(ParticleTypes.FLAME, d0 + d5, d1, d2 + d4, 0.0D, 0.05D, 0.0D);
-                    world.addParticle(ParticleTypes.FLAME, d0 + d5, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-                }
             }
         }
         super.animateTick(state, world, pos, random);
@@ -382,7 +372,7 @@ public class AshBonePileBlock extends Block implements EntityBlock {
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         if (level.getBlockEntity(pos) instanceof BonfireTileEntity te) {
-            ItemStack stack = new ItemStack(BlockSetup.ash_bone_pile.get());
+            ItemStack stack = new ItemStack(BlockSetup.skint.get());
             if (!player.isCrouching() && te.isBonfire()) {
                 stack.set(ComponentSetup.BONFIRE_DATA, new BonfireData("", false));
             } else if (te.isLit()) {
@@ -422,4 +412,17 @@ public class AshBonePileBlock extends Block implements EntityBlock {
         }
     }
 
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController(this, "clearController", 0, this::clearPredicate));
+    }
+
+    private PlayState clearPredicate(AnimationState animationState) {
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
 }
