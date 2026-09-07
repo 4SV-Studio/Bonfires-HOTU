@@ -33,7 +33,9 @@ public class LocalStrings {
             COMMAND_RADIUS_DESC = "command.bonfires.radius.desc",
 
             BUTTON_TRAVEL = "button.bonfires.travel",
+            BUTTON_DREAMTELEPORT = "button.bonfires.dreamteleport",
             BUTTON_LEAVE = "button.bonfires.leave",
+            BUTTON_SKILL = "button.bonfires.skill",
             BUTTON_ACCEPT = "button.bonfires.accept",
             BUTTON_SET_PRIVATE = "button.bonfires.set_private",
             BUTTON_REINFORCE = "button.bonfires.reinforce",
