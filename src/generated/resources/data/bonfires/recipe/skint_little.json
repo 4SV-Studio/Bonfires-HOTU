@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "bonfires",
+  "key": {
+    "L": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "Q": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "pattern": [
+    "QQQ",
+    "QLQ",
+    "QQQ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "bonfires:skint_little"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "bonfires",
+  "key": {
+    "L": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "Q": {
+      "item": "bonfires:skint_little"
+    }
+  },
+  "pattern": [
+    "QQQ",
+    "QLQ",
+    "QQQ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "bonfires:skint"
+  }
+}
