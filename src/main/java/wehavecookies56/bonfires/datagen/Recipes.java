@@ -27,92 +27,35 @@ public class Recipes extends RecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput recipeConsumer) {
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, BlockSetup.ash_block.get())
-                .requires(ItemSetup.ash_pile.get(), 9)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, BlockSetup.skint.get())
+                .pattern("QQQ")
+                .pattern("QLQ")
+                .pattern("QQQ")
+                .define('L', Items.AMETHYST_SHARD)
+                .define('Q', ItemSetup.skint_little.get())
                 .group(Bonfires.modid)
-                .unlockedBy("has_ash_pile", InventoryChangeTrigger.TriggerInstance.hasItems(ItemSetup.ash_pile.get()))
+                .unlockedBy("has_amethyst_shard", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AMETHYST_SHARD))
                 .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, BlockSetup.ash_bone_pile.get())
-                .pattern("BBB")
-                .pattern("AAA")
-                .define('A', ItemSetup.ash_pile.get())
-                .define('B', ItemSetup.homeward_bone.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ItemSetup.skint_little.get())
+                .pattern("QQQ")
+                .pattern("QLQ")
+                .pattern("QQQ")
+                .define('Q', Items.GOLD_INGOT)
+                .define('L', Items.AMETHYST_SHARD)
                 .group(Bonfires.modid)
-                .unlockedBy("has_ash_pile", InventoryChangeTrigger.TriggerInstance.hasItems(ItemSetup.ash_pile.get()))
+                .unlockedBy("has_amethyst_shard", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AMETHYST_SHARD))
                 .save(recipeConsumer);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemSetup.ash_pile.get(), 9)
-                .requires(BlockSetup.ash_block.get())
-                .group(Bonfires.modid)
-                .unlockedBy("has_ash_block", InventoryChangeTrigger.TriggerInstance.hasItems(BlockSetup.ash_block.get()))
-                .save(recipeConsumer);
+        /*ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ItemSetup.skint_up.get())
+                .pattern("QQQ")
+                .pattern("QLQ")
+                .pattern("QQQ")
+                .define('Q', ItemSetup.skint_little.get())
+                .define('L', Items.AMETHYST_SHARD)
+                .group(Bonfires.MOD_ID)
+                .unlockedBy("has_amethyst_shard", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AMETHYST_SHARD))
+                .save(recipeConsumer);*/
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ItemSetup.coiled_sword.get())
-                .pattern("OLO")
-                .pattern("FSF")
-                .pattern("OAO")
-                .define('O', Tags.Items.OBSIDIANS)
-                .define('L', Items.LAVA_BUCKET)
-                .define('F', Items.FIRE_CHARGE)
-                .define('S', Items.DIAMOND_SWORD)
-                .define('A', ItemSetup.ash_pile.get())
-                .group(Bonfires.modid)
-                .unlockedBy("has_ash_bone_pile", InventoryChangeTrigger.TriggerInstance.hasItems(BlockSetup.ash_bone_pile.get()))
-                .save(recipeConsumer);
-
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.FIRE_CHARGE), Ingredient.of(Items.IRON_SWORD), Ingredient.of(ItemSetup.coiled_sword_fragment.get()), RecipeCategory.COMBAT, ItemSetup.coiled_sword.get())
-                .unlocks("has_coiled_sword_fragment", InventoryChangeTrigger.TriggerInstance.hasItems(ItemSetup.coiled_sword_fragment.get()))
-                .save(recipeConsumer, ResourceLocation.fromNamespaceAndPath(Bonfires.modid, "coiled_sword_smithing"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BREWING, ItemSetup.estus_shard.get())
-                .requires(Tags.Items.GEMS_DIAMOND)
-                .requires(Items.BLAZE_POWDER)
-                .requires(Items.GOLDEN_APPLE)
-                .requires(Tags.Items.NUGGETS_GOLD)
-                .group(Bonfires.modid)
-                .unlockedBy("has_diamond", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.GEMS_DIAMOND).build()))
-                .save(recipeConsumer);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, ItemSetup.homeward_bone.get())
-                .requires(Tags.Items.RODS_BLAZE)
-                .requires(Tags.Items.ENDER_PEARLS)
-                .requires(Tags.Items.BONES)
-                .group(Bonfires.modid)
-                .unlockedBy("has_ender_pearl", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.ENDER_PEARLS).build()))
-                .save(recipeConsumer);
-
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Tags.Items.OBSIDIANS), RecipeCategory.MISC, ItemSetup.titanite_shard.get(), 0.25F, 1000)
-                .unlockedBy("has_obsidian", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.OBSIDIANS).build()))
-                .save(recipeConsumer);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemSetup.large_titanite_shard.get())
-                .requires(ItemSetup.titanite_shard.get(), 5)
-                .group(Bonfires.modid)
-                .unlockedBy("has_titanite_shard", InventoryChangeTrigger.TriggerInstance.hasItems(ItemSetup.titanite_shard.get()))
-                .save(recipeConsumer);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ItemSetup.titanite_chunk.get())
-                .requires(ItemSetup.large_titanite_shard.get(), 3)
-                .requires(Items.NETHERITE_SCRAP)
-                .group(Bonfires.modid)
-                .unlockedBy("has_large_titanite_shard", InventoryChangeTrigger.TriggerInstance.hasItems(ItemSetup.large_titanite_shard.get()))
-                .save(recipeConsumer);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ItemSetup.titanite_slab.get())
-                .pattern("CCC")
-                .pattern("CEC")
-                .pattern("CCC")
-                .define('C', ItemSetup.titanite_chunk.get())
-                .define('E', Items.END_CRYSTAL)
-                .group(Bonfires.modid)
-                .unlockedBy("has_titanite_chunk", InventoryChangeTrigger.TriggerInstance.hasItems(ItemSetup.titanite_chunk.get()))
-                .save(recipeConsumer);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, ItemSetup.estus_flask.get())
-                .requires(ItemSetup.estus_shard.get(), 3)
-                .requires(Items.GLASS_BOTTLE)
-                .group(Bonfires.modid)
-                .unlockedBy("has_estus_shard", InventoryChangeTrigger.TriggerInstance.hasItems(ItemSetup.estus_shard.get()))
-                .save(recipeConsumer);
     }
 }
