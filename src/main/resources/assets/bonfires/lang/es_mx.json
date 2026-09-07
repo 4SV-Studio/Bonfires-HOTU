@@ -2,19 +2,20 @@
     "itemGroup.bonfires": "Hogueras",
 
     "block.bonfires.ash_block": "Bloque de ceniza",
-    "block.bonfires.ash_bone_pile": "Pila de huesos y ceniza",
+    "block.bonfires.skint_down": "Pila de huesos y ceniza",
 
     "item.bonfires.ash_pile": "Pila de ceniza",
-    "item.bonfires.coiled_sword": "Espada en espiral",
-    "item.bonfires.estus_flask": "Frasco de Estus",
-    "item.bonfires.homeward_bone": "Hueso de regreso",
+    "item.bonfires.skint_up": "Espada en espiral",
+    "item.bonfires.estus_flask": "Vial of Vitality",
+    "item.bonfires.dream_skint": "Dream Skint",
     "item.bonfires.coiled_sword_fragment": "Fragmento de Espada en espiral",
-    "item.bonfires.estus_shard": "Fragmento de estus",
+    "item.bonfires.estus_shard": "Shard of Vitality",
     "item.bonfires.titanite_shard": "Fragmento de titanita",
     "item.bonfires.large_titanite_shard": "Fragmento de titanita grande",
     "item.bonfires.titanite_chunk": "Trozo de titanita",
     "item.bonfires.titanite_slab": "Losa de titanita",
     "item.bonfires.undead_bone_shard": "Fragmento de hueso cenizo",
+    "item.bonfires.skint_little": "Little Skint Part",
 
     "command.bonfires.match": "Se encontraron %1$s hoguera(s) que coinciden %2$s",
     "command.bonfires.nomatch": "No se encontraron hogueras que coincidan %1$s",
@@ -47,6 +48,7 @@
     "button.bonfires.accept": "Aceptar",
     "button.bonfires.set_private": "hacer privada",
     "button.bonfires.reinforce": "Reforzar",
+    "button.bonfires.skill": "Skills",
 
     "text.bonfires.name": "Introduce un nombre para la Hoguera",
     "bonfire.lit": "HOGUERA ENCENDIDA",
@@ -66,8 +68,8 @@
     "advancements.bonfires.estus_flask.desc": "Adquiere un Frasco de estus",
     "advancements.bonfires.estus_shard": "Fragmento de estus",
     "advancements.bonfires.estus_shard.desc": "Adquiere un Fragmento de estus",
-    "advancements.bonfires.homeward_bone": "Hueso de regreso",
-    "advancements.bonfires.homeward_bone.desc": "Acquire a Homeward Bone Adquiere un Hueso de regreso",
+    "advancements.bonfires.dream_skint": "Hueso de regreso",
+    "advancements.bonfires.dream_skint.desc": "Acquire a Dream Skint Adquiere un Hueso de regreso",
     "advancements.bonfires.ash_bone_pile": "A medio camino",
     "advancements.bonfires.ash_bone_pile.desc": "Adquiere la base de una Hoguera"
 }

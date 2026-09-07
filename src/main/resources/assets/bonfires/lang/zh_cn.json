@@ -2,19 +2,20 @@
     "itemGroup.bonfires": "篝火",
 
     "block.bonfires.ash_block": "灰烬块",
-    "block.bonfires.ash_bone_pile": "骨灰堆",
+    "block.bonfires.skint_down": "骨灰堆",
 
     "item.bonfires.ash_pile": "灰烬堆",
-    "item.bonfires.coiled_sword": "螺旋剑",
-    "item.bonfires.estus_flask": "原素瓶",
-    "item.bonfires.homeward_bone": "返回骨片",
+    "item.bonfires.skint_up": "螺旋剑",
+    "item.bonfires.estus_flask": "Vial of Vitality",
+    "item.bonfires.dream_skint": "Home Skint",
     "item.bonfires.coiled_sword_fragment": "螺旋剑的残破碎片",
-    "item.bonfires.estus_shard": "原素碎片",
+    "item.bonfires.estus_shard": "Shard of Vitality",
     "item.bonfires.titanite_shard": "楔形石碎片",
     "item.bonfires.large_titanite_shard": "楔形石大碎片",
     "item.bonfires.titanite_chunk": "楔形石块",
     "item.bonfires.titanite_slab": "楔形石原盘",
     "item.bonfires.undead_bone_shard": "不死人遗骨",
+    "item.bonfires.skint_little": "Little Skint Part",
 
     "command.bonfires.match": "共找到 %1$s 个符合条件 %2$s 的篝火",
     "command.bonfires.nomatch": "没有找到符合条件 %1$s 的篝火",
@@ -47,6 +48,7 @@
     "button.bonfires.accept": "接受",
     "button.bonfires.set_private": "设置私有",
     "button.bonfires.reinforce": "强化",
+    "button.bonfires.skill": "Skills",
     "text.bonfires.reinforce": "选择强化物品",
     "text.bonfires.max_level": "最高等级",
 
@@ -70,8 +72,7 @@
     "advancements.bonfires.estus_flask.desc": "获得一个原素瓶",
     "advancements.bonfires.estus_shard": "原素碎片",
     "advancements.bonfires.estus_shard.desc": "获得一个原素碎片",
-    "advancements.bonfires.homeward_bone": "返回骨片",
-    "advancements.bonfires.homeward_bone.desc": "获得一个返回骨片",
-    "advancements.bonfires.ash_bone_pile": "到一半了",
+    "advancements.bonfires.dream_skint": "返回骨片",
+    "advancements.bonfires.dream_skint.desc": "获得一个返回骨片",
     "advancements.bonfires.ash_bone_pile.desc": "获得骨灰堆"
 }

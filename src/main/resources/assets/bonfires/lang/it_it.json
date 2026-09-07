@@ -2,19 +2,20 @@
     "itemGroup.bonfires": "Falo'",
 
     "block.bonfires.ash_block": "Blocco di cenere",
-    "block.bonfires.ash_bone_pile": "Pila di ossa e cenere",
+    "block.bonfires.skint_down": "Pila di ossa e cenere",
 
     "item.bonfires.ash_pile": "Pila di cenere",
-    "item.bonfires.coiled_sword": "Spada a spirale",
-    "item.bonfires.estus_flask": "Fiaschetta Estus",
-    "item.bonfires.homeward_bone": "Osso del ritorno",
+    "item.bonfires.skint_up": "Spada a spirale",
+    "item.bonfires.estus_flask": "Vial of Vitality",
+    "item.bonfires.dream_skint": "Dream Skint",
     "item.bonfires.coiled_sword_fragment": "Frammento di spada a spirale",
-    "item.bonfires.estus_shard": "Scheggia Estus",
+    "item.bonfires.estus_shard": "Shard of Vitality",
     "item.bonfires.titanite_shard": "Frammento di Titanite",
     "item.bonfires.large_titanite_shard": "Grande frammento di Titanite",
     "item.bonfires.titanite_chunk": "Pezzo di Titanite",
     "item.bonfires.titanite_slab": "Lastra di Titanite",
     "item.bonfires.undead_bone_shard": "Frammento di osso di non morto",
+    "item.bonfires.skint_little": "Little Skint Part",
 
     "command.bonfires.match": "Trovato %1$s falo' corrispondente a %2$s",
     "command.bonfires.nomatch": "Trovato nessun falo' corrispondente a %1$s",
@@ -47,6 +48,7 @@
     "button.bonfires.accept": "Accetta",
     "button.bonfires.set_private": "Imposta privato",
     "button.bonfires.reinforce": "Rinforza",
+    "button.bonfires.skill": "Skills",
 
     "text.bonfires.name": "Inserisci un nome per il Falo'",
     "bonfire.lit": "FALO' ACCESO",
@@ -70,8 +72,8 @@
     "advancements.bonfires.estus_flask.desc": "Ottieni una Fiaschetta Estus",
     "advancements.bonfires.estus_shard": "Scheggia Estus",
     "advancements.bonfires.estus_shard.desc": "Ottieni una Scheggia Estus",
-    "advancements.bonfires.homeward_bone": "Osso del ritorno",
-    "advancements.bonfires.homeward_bone.desc": "Ottieni un Osso del ritorno",
+    "advancements.bonfires.dream_skint": "Osso del ritorno",
+    "advancements.bonfires.dream_skint.desc": "Ottieni un Osso del ritorno",
     "advancements.bonfires.ash_bone_pile": "A meta' strada",
     "advancements.bonfires.ash_bone_pile.desc": "Ottieni la base di un Falo'"
 }
