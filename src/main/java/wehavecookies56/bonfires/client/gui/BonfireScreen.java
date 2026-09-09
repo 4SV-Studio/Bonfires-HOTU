@@ -2,6 +2,7 @@ package wehavecookies56.bonfires.client.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
@@ -29,11 +30,7 @@ import wehavecookies56.bonfires.LocalStrings;
 import wehavecookies56.bonfires.bonfire.Bonfire;
 import wehavecookies56.bonfires.bonfire.BonfireRegistry;
 import wehavecookies56.bonfires.client.ScreenshotUtils;
-import wehavecookies56.bonfires.client.gui.widgets.BonfireButton;
-import wehavecookies56.bonfires.client.gui.widgets.BonfireCustomButton;
-import wehavecookies56.bonfires.client.gui.widgets.BonfirePageButton;
-import wehavecookies56.bonfires.client.gui.widgets.DimensionTabButton;
-import wehavecookies56.bonfires.client.gui.widgets.DreamTeleport;
+import wehavecookies56.bonfires.client.gui.widgets.*;
 import wehavecookies56.bonfires.packets.PacketHandler;
 import wehavecookies56.bonfires.packets.server.RequestDimensionsFromServer;
 import wehavecookies56.bonfires.packets.server.Travel;
@@ -119,6 +116,23 @@ public class BonfireScreen extends Screen {
     private final int tex_height = 166;
     private final int travel_width = 195;
     public final int travel_height = 136;
+
+    private static final ResourceLocation TITLE_BG = ResourceLocation.fromNamespaceAndPath(Bonfires.modid, "textures/gui/title_bg.png");
+
+    private static final int TITLE_BG_TEX_WIDTH = 128;
+    private static final int TITLE_BG_TEX_HEIGHT = 32;
+    private static final int TITLE_BG_X = 5;
+    private static final int TITLE_BG_Y = 10;
+    private static final int TITLE_BG_WIDTH = 192;
+    private static final int TITLE_BG_HEIGHT = 32;
+
+    private static final int TITLE_BG_PADDING = 16;
+
+    private static final float TITLE_MAX_SCALE = 2.0F;
+    private static final float TITLE_MIN_SCALE = 1.0F;
+    private static final int TITLE_COLOR = new Color(248, 167, 0).getRGB();
+
+    private static final ResourceLocation FADE_TEX = ResourceLocation.fromNamespaceAndPath(Bonfires.modid, "textures/gui/fade.png");
 
     public Map<UUID, String> ownerNames = new HashMap<>();
 
@@ -237,7 +251,7 @@ public class BonfireScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (!ScreenshotUtils.isTakingScreenshot()) {
-            renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+            //renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
             guiGraphics.setColor(1, 1, 1, 1);
             Font font = Minecraft.getInstance().font;
             if (travelOpen) {
@@ -295,8 +309,9 @@ public class BonfireScreen extends Screen {
                 int yZero = (height / 2) - (travel_height / 2) + 128 - 17;
                 guiGraphics.drawString(font, pages, xZero + (55 / 2) - font.width(pages) / 2, yZero + (14 / 2) - font.lineHeight / 2, 0xFFFFFF);
             } else {
-                int tex_width = 90;
-                guiGraphics.blit(MENU, (width / 4) - (tex_width / 2), (height / 2) - (tex_height / 2), 0, 0, tex_width, tex_height);
+                int tex_height = 32;
+
+                //guiGraphics.blit(MENU, (width / 4) - (tex_width / 2), (height / 2) - (tex_height / 2), 0, 0, tex_width, tex_height);
                 for(Renderable renderable : this.renderables) {
                     renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
                 }
@@ -305,13 +320,49 @@ public class BonfireScreen extends Screen {
                 if (currentBonfire != null) {
                     name = currentBonfire.getName();
                     if (!currentBonfire.isPublic()) {
-                        drawCenteredStringNoShadow(guiGraphics, font, Component.translatable(LocalStrings.TEXT_PRIVATE).getString(), (width / 4), (height / 2) - (tex_height / 2) + 20, new Color(255, 255, 255).hashCode());
+                        drawCenteredStringNoShadow(guiGraphics, font, Component.translatable(LocalStrings.TEXT_PRIVATE).getString(), (width / 4), (height / 2) - (tex_height / 2) + 20, new Color(255, 255, 255).getRGB());
                     }
                 }
-                drawCenteredStringNoShadow(guiGraphics, font, name, (width / 4), (height / 2) - (tex_height / 2) + 10, new Color(255, 255, 255).hashCode());
-                drawCenteredStringNoShadow(guiGraphics, font, ownerNames.get(currentBonfire.getOwner()), (width / 4), (height / 2) - (tex_height / 2) + tex_height - 10, new Color(255, 255, 255).hashCode());
+
+                blitTransparent(FADE_TEX, 0, 0, 32, Minecraft.getInstance().getWindow().getGuiScaledHeight(), 0F, 0F, 32, 32, 32, 32, guiGraphics);
+
+                blitTransparent(TITLE_BG, TITLE_BG_X, TITLE_BG_Y, TITLE_BG_WIDTH, TITLE_BG_HEIGHT, 0F, 0F, TITLE_BG_TEX_WIDTH, TITLE_BG_TEX_HEIGHT, TITLE_BG_TEX_WIDTH, TITLE_BG_TEX_HEIGHT, guiGraphics);
+                drawTitle(guiGraphics, font, name);
             }
         }
+    }
+
+    private void blitTransparent(ResourceLocation atlasLocation, int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight, GuiGraphics guiGraphics) {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        guiGraphics.blit(atlasLocation, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
+        RenderSystem.disableBlend();
+    }
+
+    private void drawTitle(GuiGraphics guiGraphics, Font font, String name) {
+        if (name == null || name.isEmpty()) {
+            return;
+        }
+        int maxWidth = TITLE_BG_WIDTH - (TITLE_BG_PADDING * 2);
+        int textWidth = font.width(name);
+        float scale = TITLE_MAX_SCALE;
+        if (textWidth * scale > maxWidth) {
+            scale = Math.max(TITLE_MIN_SCALE, maxWidth / (float) textWidth);
+        }
+        String text = name;
+        if (textWidth * scale > maxWidth) {
+            String ellipsis = "...";
+            int room = (int) (maxWidth / scale) - font.width(ellipsis);
+            text = font.plainSubstrByWidth(text, Math.max(room, 0)) + ellipsis;
+            textWidth = font.width(text);
+        }
+
+        guiGraphics.pose().pushPose();
+
+        guiGraphics.pose().translate(TITLE_BG_X + (TITLE_BG_WIDTH / 2F), TITLE_BG_Y + (TITLE_BG_HEIGHT / 2F), 0F);
+        guiGraphics.pose().scale(scale, scale, 1F);
+        guiGraphics.drawString(font, text, -textWidth / 2F, -(font.lineHeight - 1) / 2F, TITLE_COLOR, false);
+        guiGraphics.pose().popPose();
     }
 
     public Bonfire getSelectedBonfire() {
@@ -333,12 +384,12 @@ public class BonfireScreen extends Screen {
                 guiGraphics.blit(screenshotImage.textureLocation(), nameX-3, nameY-5, (float) ScreenshotUtils.width /2, 0, ScreenshotUtils.width, ScreenshotUtils.height, ScreenshotUtils.width*2, ScreenshotUtils.height);
             }
 
-            if (showInfo) {
+            /*if (showInfo) {
                 Font font = Minecraft.getInstance().font;
-                guiGraphics.drawString(font, selectedInstance.getName(), nameX, nameY, new Color(255, 255, 255).hashCode());
-                guiGraphics.drawString(font, "X:" + selectedInstance.getPos().getX() + " Y:" + selectedInstance.getPos().getY() + " Z:" + selectedInstance.getPos().getZ(), nameX, nameY + font.lineHeight + 3, new Color(255, 255, 255).hashCode());
-                guiGraphics.drawString(font, ownerNames.get(selectedInstance.getOwner()), nameX, nameY + (font.lineHeight + 3) * 2, new Color(255, 255, 255).hashCode());
-            }
+                guiGraphics.drawString(font, selectedInstance.getName(), nameX, nameY, new Color(255, 255, 255).getRGB());
+                guiGraphics.drawString(font, "X:" + selectedInstance.getPos().getX() + " Y:" + selectedInstance.getPos().getY() + " Z:" + selectedInstance.getPos().getZ(), nameX, nameY + font.lineHeight + 3, new Color(255, 255, 255).getRGB());
+                guiGraphics.drawString(font, ownerNames.get(selectedInstance.getOwner()), nameX, nameY + (font.lineHeight + 3) * 2, new Color(255, 255, 255).getRGB());
+            }*/
         }
     }
 
@@ -590,9 +641,7 @@ public class BonfireScreen extends Screen {
                     }
                 }
             }
-            reinforce.visible = false;
             leave.visible = false;
-            skill.visible = false;
             //dreamteleport.visible = false;
             next.visible = true;
             prev.visible = true;
@@ -619,9 +668,7 @@ public class BonfireScreen extends Screen {
                     skill.setY((height / 2) - (tex_height / 2) + 72 + 21);
                 }
             }
-            reinforce.visible = true;
             leave.visible = true;
-            skill.visible = true;
             //dreamteleport.visible = false;
             next.visible = false;
             prev.visible = false;
@@ -658,10 +705,16 @@ public class BonfireScreen extends Screen {
         int selectedY = (height / 2) - 50;
         addRenderableWidget(screenshot = new BonfireCustomButton(SCREENSHOT, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.SCREENSHOT, button -> action(SCREENSHOT)));
         addRenderableWidget(info = new BonfireCustomButton(INFO, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.INFO, button -> action(INFO)));
-        addRenderableWidget(travel = Button.builder(Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 25).size(80, 20).build());
-        addRenderableWidget(leave = Button.builder(Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62).size(80, 20).build());
+
+        addRenderableWidget(travel = CButton.builder(Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 25).size(80, 20).build());
+        addRenderableWidget(leave = CButton.builder(Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62).size(80, 20).build());
+
         addRenderableWidget(skill = Button.builder(Component.translatable(LocalStrings.BUTTON_SKILL), button -> action(SKILL, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62 + 21).size(80, 20).build());
         addRenderableWidget(reinforce = Button.builder(Component.translatable(LocalStrings.BUTTON_REINFORCE), button -> action(REINFORCE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 41).size(80, 20).build());
+
+        skill.visible = false;
+        reinforce.visible = false;
+
         addRenderableWidget(next = Button.builder(Component.literal(">"), button -> action(NEXT)).pos(0, 0).size(20, 20).build());
         addRenderableWidget(prev = Button.builder(Component.literal("<"), button -> action(PREV)).pos(20, 0).size(20, 20).build());
         addRenderableWidget(bonfire_next = new BonfirePageButton(this, BONFIRE_NEXT, 0, 0, true));

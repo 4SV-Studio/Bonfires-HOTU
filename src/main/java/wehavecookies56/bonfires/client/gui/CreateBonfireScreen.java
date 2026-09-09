@@ -117,7 +117,7 @@ public class CreateBonfireScreen extends Screen {
         isPrivate.setX((width / 2) - (isPrivate.getWidth() / 2));
         isPrivate.setY((height / 2) - (10 / 2) + 20);
         addRenderableWidget(isPrivate);
-        nameBox.setMaxLength(14);
+        nameBox.setMaxLength(20);
         updateButtons();
     }
 
