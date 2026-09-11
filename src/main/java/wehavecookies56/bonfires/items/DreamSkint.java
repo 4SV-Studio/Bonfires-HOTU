@@ -20,7 +20,7 @@ public class DreamSkint extends Item {
 
         if (!pLevel.isClientSide()) {
             CommandSourceStack sourceStack = pLevel.getServer().createCommandSourceStack();
-            String command = "execute as " + pPlayer.getName().getString() + " in dreamworld:dreamworld run tp @s 0 103 0";
+            String command = "execute as " + pPlayer.getName().getString() + " in thoue:dreamworld run tp @s 0 100 0";
             ParseResults<CommandSourceStack> parseResults = pLevel.getServer().getCommands().getDispatcher().parse(command, sourceStack);
             pLevel.getServer().getCommands().performCommand(parseResults, command);
         }
