@@ -31,7 +31,11 @@ public class CButton extends Button {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        guiGraphics.setColor(1, 1, 1, 1);
+        if (isHoveredOrFocused()) {
+            guiGraphics.setColor(1, 1, 1, 1);
+        } else {
+            guiGraphics.setColor(0.88F, 0.88F, 0.88F, 1);
+        }
         guiGraphics.blit(
                 TEXTURE,
                 getX(), getY(),
@@ -41,6 +45,7 @@ public class CButton extends Button {
                 textureWidth, textureHeight
         );
 
+        guiGraphics.setColor(1, 1, 1, 1);
         RenderSystem.disableBlend();
 
         guiGraphics.drawString(
