@@ -121,8 +121,6 @@ public class BonfireScreen extends Screen {
 
     private static final int TITLE_BG_TEX_WIDTH = 128;
     private static final int TITLE_BG_TEX_HEIGHT = 32;
-    private static final int TITLE_BG_X = 5;
-    private static final int TITLE_BG_Y = 10;
     private static final int TITLE_BG_WIDTH = 192;
     private static final int TITLE_BG_HEIGHT = 32;
 
@@ -264,7 +262,7 @@ public class BonfireScreen extends Screen {
                 } else {
                     formattedName = I18n.get(LocalStrings.getDimensionKey(tabs[dimTabSelected - 5].getDimension()));
                 }
-                guiGraphics.drawString(font, formattedName + " (" + tabs[dimTabSelected - 5].getDimension().location() + ")", (int)((width / 2F) - 100), (int)((height / 2F) - 62), 1184274, false);
+                //guiGraphics.drawString(font, formattedName + " (" + tabs[dimTabSelected - 5].getDimension().location() + ")", (int)((width / 2F) - 100), (int)((height / 2F) - 62), 1184274, false);
 
                 if (bonfireSelected >= BONFIRE1) {
                     drawSelectedBonfire(guiGraphics, mouseX, mouseY, partialTicks);
@@ -284,7 +282,7 @@ public class BonfireScreen extends Screen {
                         List<FormattedCharSequence> lines = new ArrayList<>();
                         lines.add(Component.translatable("ID: " + selectedInstance.getId()).getVisualOrderText());
                         lines.add(Component.translatable("TIME: " + selectedInstance.getTimeCreated().toString()).getVisualOrderText());
-                        guiGraphics.renderTooltip(font, lines, mouseX, mouseY);
+                        //guiGraphics.renderTooltip(font, lines, mouseX, mouseY);
                     }
                 }
                 for (DimensionTabButton currentTab : tabs) {
@@ -296,7 +294,7 @@ public class BonfireScreen extends Screen {
                             formattedName = I18n.get(LocalStrings.getDimensionKey(currentTab.getDimension()));
                         }
                         if (mouseX >= currentTab.getX() && mouseX <= currentTab.getX() + currentTab.getWidth() && mouseY >= currentTab.getY() && mouseY <= currentTab.getY() + currentTab.getHeight()) {
-                            guiGraphics.renderTooltip(font, Component.translatable(formattedName + " (" + currentTab.getDimension().location() + ")"), mouseX, mouseY);
+                            guiGraphics.renderTooltip(font, Component.translatable(formattedName), mouseX, mouseY);
                         }
                     }
                 }
@@ -326,7 +324,7 @@ public class BonfireScreen extends Screen {
 
                 blitTransparent(FADE_TEX, 0, 0, 32, Minecraft.getInstance().getWindow().getGuiScaledHeight(), 0F, 0F, 32, 32, 32, 32, guiGraphics);
 
-                blitTransparent(TITLE_BG, TITLE_BG_X, TITLE_BG_Y, TITLE_BG_WIDTH, TITLE_BG_HEIGHT, 0F, 0F, TITLE_BG_TEX_WIDTH, TITLE_BG_TEX_HEIGHT, TITLE_BG_TEX_WIDTH, TITLE_BG_TEX_HEIGHT, guiGraphics);
+                blitTransparent(TITLE_BG, 5, 10, TITLE_BG_WIDTH, TITLE_BG_HEIGHT, 0F, 0F, TITLE_BG_TEX_WIDTH, TITLE_BG_TEX_HEIGHT, TITLE_BG_TEX_WIDTH, TITLE_BG_TEX_HEIGHT, guiGraphics);
                 drawTitle(guiGraphics, font, name);
             }
         }
@@ -359,7 +357,7 @@ public class BonfireScreen extends Screen {
 
         guiGraphics.pose().pushPose();
 
-        guiGraphics.pose().translate(TITLE_BG_X + (TITLE_BG_WIDTH / 2F), TITLE_BG_Y + (TITLE_BG_HEIGHT / 2F), 0F);
+        guiGraphics.pose().translate(5 + (TITLE_BG_WIDTH / 2F), 10 + (TITLE_BG_HEIGHT / 2F), 0F);
         guiGraphics.pose().scale(scale, scale, 1F);
         guiGraphics.drawString(font, text, -textWidth / 2F, -(font.lineHeight - 1) / 2F, TITLE_COLOR, false);
         guiGraphics.pose().popPose();
@@ -587,18 +585,10 @@ public class BonfireScreen extends Screen {
         if (travelOpen) {
             if (bonfireSelected >= BONFIRE1) {
                 travel.visible = true;
-                if (selectedInstance != null) {
-                    if (selectedInstance.getId().equals(bonfire.getID())) {
-                        travel.active = false;
-                    } else {
-                        travel.active = true;
-                    }
-                }
-                travel.setX((width / 2) - 5 + 12);
-                travel.setY((height / 2) + 38);
+                travel.active = selectedInstance != null && !selectedInstance.getId().equals(bonfire.getID());
                 info.visible = !noScreenshot;
                 info.active = !noScreenshot;
-                if (BonfiresConfig.Client.renderScreenshotsInGui) {
+                if (BonfiresConfig.Client.renderScreenshotsInGui && selectedInstance != null) {
                     if (bonfire.getID().equals(selectedInstance.getId())) {
                         screenshot.visible = true;
                         screenshot.active = true;
@@ -642,6 +632,7 @@ public class BonfireScreen extends Screen {
                 }
             }
             leave.visible = false;
+            travel.visible = false;
             //dreamteleport.visible = false;
             next.visible = true;
             prev.visible = true;
@@ -658,8 +649,6 @@ public class BonfireScreen extends Screen {
             bonfire_next.visible = false;
             bonfire_next.active = false;
             travel.visible = true;
-            travel.setX((width / 4) - (80 / 2));
-            travel.setY((height / 2) - (tex_height / 2) + 20);
             if (registry.getBonfire(bonfire.getID()) != null) {
                 if (!registry.getBonfire(bonfire.getID()).isPublic()) {
                     travel.setY((height / 2) - (tex_height / 2) + 30);
@@ -706,8 +695,8 @@ public class BonfireScreen extends Screen {
         addRenderableWidget(screenshot = new BonfireCustomButton(SCREENSHOT, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.SCREENSHOT, button -> action(SCREENSHOT)));
         addRenderableWidget(info = new BonfireCustomButton(INFO, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.INFO, button -> action(INFO)));
 
-        addRenderableWidget(travel = CButton.builder(Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 25).size(80, 20).build());
-        addRenderableWidget(leave = CButton.builder(Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62).size(80, 20).build());
+        addRenderableWidget(travel = new CButton(5, (height / 2) - (tex_height / 2) + 25, 124, 25, Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)));
+        addRenderableWidget(leave = new CButton(5, (height / 2) - (tex_height / 2) + 62, 124, 25, Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)));
 
         addRenderableWidget(skill = Button.builder(Component.translatable(LocalStrings.BUTTON_SKILL), button -> action(SKILL, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62 + 21).size(80, 20).build());
         addRenderableWidget(reinforce = Button.builder(Component.translatable(LocalStrings.BUTTON_REINFORCE), button -> action(REINFORCE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 41).size(80, 20).build());

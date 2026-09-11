@@ -1,6 +1,8 @@
 package wehavecookies56.bonfires.client.gui.widgets;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -12,7 +14,7 @@ public class CButton extends Button {
     private static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath(
                     Bonfires.modid,
-                    "textures/gui/cButton.png"
+                    "textures/gui/cbutton.png"
             );
 
     public CButton(int x, int y, int width, int height,
@@ -24,19 +26,27 @@ public class CButton extends Button {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int textureWidth = 64;
         int textureHeight = 24;
+        Font font = Minecraft.getInstance().font;
 
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+
+        guiGraphics.setColor(1, 1, 1, 1);
         guiGraphics.blit(
                 TEXTURE,
                 getX(), getY(),
-                0, 0,
                 getWidth(), getHeight(),
+                0, 0,
+                textureWidth, textureHeight,
                 textureWidth, textureHeight
         );
 
-        guiGraphics.drawCenteredString(
+        RenderSystem.disableBlend();
+
+        guiGraphics.drawString(
                 Minecraft.getInstance().font,
                 getMessage(),
-                getX() + getWidth() / 2,
+                getX() + 15,
                 getY() + (getHeight() - 8) / 2,
                 0xFFFFFFFF
         );
