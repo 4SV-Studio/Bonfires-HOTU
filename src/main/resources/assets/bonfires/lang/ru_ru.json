@@ -37,8 +37,8 @@
     "command.bonfires.pos": "Позиция: [X:%1$s,Y:%2$s,Z:%3$s];",
     "command.bonfires.na": "Нет данных",
 
-    "button.bonfires.travel": "Перемещение",
-    "button.bonfires.leave": "Покинуть",
+    "button.bonfires.travel": "Переместится",
+    "button.bonfires.leave": "Встать",
     "button.bonfires.accept": "Принять",
     "button.bonfires.set_private": "Установить частным",
     "button.bonfires.reinforce": "Улучшить",

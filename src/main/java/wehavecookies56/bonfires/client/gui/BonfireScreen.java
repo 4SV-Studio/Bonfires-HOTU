@@ -117,6 +117,8 @@ public class BonfireScreen extends Screen {
     private final int travel_width = 195;
     public final int travel_height = 136;
 
+    private static final float TRAVEL_SCALE = 1.35F;
+
     private static final ResourceLocation TITLE_BG = ResourceLocation.fromNamespaceAndPath(Bonfires.modid, "textures/gui/title_bg.png");
 
     private static final int TITLE_BG_TEX_WIDTH = 128;
@@ -187,6 +189,11 @@ public class BonfireScreen extends Screen {
         if (button == 1) {
             Minecraft.getInstance().setScreen(new BonfireScreen(bonfire, ownerNames, dimensions, registry, canReinforce));
         }
+        if (travelOpen) {
+            int centerX = width / 2;
+            int centerY = height / 2 - 50;
+            return super.mouseClicked(centerX + (mouseX - centerX) / TRAVEL_SCALE, centerY + (mouseY - centerY) / TRAVEL_SCALE, button);
+        }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
@@ -253,7 +260,15 @@ public class BonfireScreen extends Screen {
             guiGraphics.setColor(1, 1, 1, 1);
             Font font = Minecraft.getInstance().font;
             if (travelOpen) {
-                drawTravelMenu(guiGraphics, mouseX, mouseY, partialTicks);
+                guiGraphics.pose().pushPose();
+                final int centerX = width / 2;
+                final int centerY = height / 2 - 50;
+                guiGraphics.pose().translate(centerX, centerY, 0);
+                guiGraphics.pose().scale(TRAVEL_SCALE, TRAVEL_SCALE, 1);
+                guiGraphics.pose().translate(-centerX, -centerY, 0);
+                final int scaledMouseX = (int) (centerX + (mouseX - centerX) / TRAVEL_SCALE);
+                final int scaledMouseY = (int) (centerY + (mouseY - centerY) / TRAVEL_SCALE);
+                drawTravelMenu(guiGraphics, scaledMouseX, scaledMouseY, partialTicks);
 
                 String formattedName;
                 if (I18n.exists(LocalStrings.getDimensionKey(tabs[dimTabSelected - 5].getDimension()))) {
@@ -265,12 +280,12 @@ public class BonfireScreen extends Screen {
                 //guiGraphics.drawString(font, formattedName + " (" + tabs[dimTabSelected - 5].getDimension().location() + ")", (int)((width / 2F) - 100), (int)((height / 2F) - 62), 1184274, false);
 
                 if (bonfireSelected >= BONFIRE1) {
-                    drawSelectedBonfire(guiGraphics, mouseX, mouseY, partialTicks);
+                    drawSelectedBonfire(guiGraphics, scaledMouseX, scaledMouseY, partialTicks);
                     for(Renderable renderable : this.renderables) {
-                        renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
+                        renderable.render(guiGraphics, scaledMouseX, scaledMouseY, partialTicks);
                     }                } else {
                     for(Renderable renderable : this.renderables) {
-                        renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
+                        renderable.render(guiGraphics, scaledMouseX, scaledMouseY, partialTicks);
                     }
                 }
                 if (selectedInstance != null) {
@@ -278,7 +293,7 @@ public class BonfireScreen extends Screen {
                     int nameY = (height / 2) - 45;
                     int nameEndX = nameX + font.width(selectedInstance.getName());
                     int nameEndY = nameY + font.lineHeight;
-                    if (mouseX >= nameX && mouseX <= nameEndX && mouseY >= nameY && mouseY <= nameEndY) {
+                    if (scaledMouseX >= nameX && scaledMouseX <= nameEndX && scaledMouseY >= nameY && scaledMouseY <= nameEndY) {
                         List<FormattedCharSequence> lines = new ArrayList<>();
                         lines.add(Component.translatable("ID: " + selectedInstance.getId()).getVisualOrderText());
                         lines.add(Component.translatable("TIME: " + selectedInstance.getTimeCreated().toString()).getVisualOrderText());
@@ -293,8 +308,8 @@ public class BonfireScreen extends Screen {
                         } else {
                             formattedName = I18n.get(LocalStrings.getDimensionKey(currentTab.getDimension()));
                         }
-                        if (mouseX >= currentTab.getX() && mouseX <= currentTab.getX() + currentTab.getWidth() && mouseY >= currentTab.getY() && mouseY <= currentTab.getY() + currentTab.getHeight()) {
-                            guiGraphics.renderTooltip(font, Component.translatable(formattedName), mouseX, mouseY);
+                        if (scaledMouseX >= currentTab.getX() && scaledMouseX <= currentTab.getX() + currentTab.getWidth() && scaledMouseY >= currentTab.getY() && scaledMouseY <= currentTab.getY() + currentTab.getHeight()) {
+                            guiGraphics.renderTooltip(font, Component.translatable(formattedName), scaledMouseX, scaledMouseY);
                         }
                     }
                 }
@@ -306,6 +321,7 @@ public class BonfireScreen extends Screen {
                 int xZero = (width / 2) - (travel_width / 2) + 16;
                 int yZero = (height / 2) - (travel_height / 2) + 128 - 17;
                 guiGraphics.drawString(font, pages, xZero + (55 / 2) - font.width(pages) / 2, yZero + (14 / 2) - font.lineHeight / 2, 0xFFFFFF);
+                guiGraphics.pose().popPose();
             } else {
                 int tex_height = 32;
 
@@ -695,8 +711,8 @@ public class BonfireScreen extends Screen {
         addRenderableWidget(screenshot = new BonfireCustomButton(SCREENSHOT, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.SCREENSHOT, button -> action(SCREENSHOT)));
         addRenderableWidget(info = new BonfireCustomButton(INFO, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.INFO, button -> action(INFO)));
 
-        addRenderableWidget(travel = new CButton(5, (height / 2) - (tex_height / 2) + 25, 124, 25, Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)));
-        addRenderableWidget(leave = new CButton(5, (height / 2) - (tex_height / 2) + 62, 124, 25, Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)));
+        addRenderableWidget(travel = new CButton(5, (height / 2) - (tex_height / 2) + 62, 124, 25, Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)));
+        addRenderableWidget(leave = new CButton(5, (height / 2) - (tex_height / 2) + 25, 124, 25, Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)));
 
         addRenderableWidget(skill = Button.builder(Component.translatable(LocalStrings.BUTTON_SKILL), button -> action(SKILL, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62 + 21).size(80, 20).build());
         addRenderableWidget(reinforce = Button.builder(Component.translatable(LocalStrings.BUTTON_REINFORCE), button -> action(REINFORCE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 41).size(80, 20).build());
