@@ -26,7 +26,6 @@ public class CButton extends Button {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int textureWidth = 64;
         int textureHeight = 24;
-        Font font = Minecraft.getInstance().font;
 
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();

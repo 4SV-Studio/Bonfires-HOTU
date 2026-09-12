@@ -1,10 +1,13 @@
 package wehavecookies56.bonfires.client.gui.widgets;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
+import wehavecookies56.bonfires.Bonfires;
 import wehavecookies56.bonfires.bonfire.Bonfire;
 import wehavecookies56.bonfires.client.gui.BonfireScreen;
 
@@ -15,8 +18,14 @@ public class BonfireButton extends ExtendedButton {
     private BonfireScreen parent;
     private Bonfire bonfire;
 
+    private static final ResourceLocation TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(
+                    Bonfires.modid,
+                    "textures/gui/cbutton.png"
+            );
+
     public BonfireButton(BonfireScreen parent, int id, int x, int y) {
-        super(x, y, 93, Minecraft.getInstance().font.lineHeight+4, Component.empty(), button -> {
+        super(x, y, 90, Minecraft.getInstance().font.lineHeight+4, Component.empty(), button -> {
             parent.action(id);
         });
         this.parent = parent;
@@ -32,6 +41,9 @@ public class BonfireButton extends ExtendedButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        int textureWidth = 64;
+        int textureHeight = 24;
+
         if (bonfire != null) {
             if (bonfire.getDimension() == parent.tabs[parent.dimTabSelected-5].getDimension()) {
                 setMessage(Component.translatable(bonfire.getName()));
@@ -45,18 +57,34 @@ public class BonfireButton extends ExtendedButton {
                                     if (parent.bonfires.get(parent.tabs[parent.dimTabSelected - 5].getDimension()).get(parent.bonfirePage).get(parent.bonfireSelected - 11) != null) {
                                         Bonfire b = parent.bonfires.get(parent.tabs[parent.dimTabSelected - 5].getDimension()).get(parent.bonfirePage).get(parent.bonfireSelected - 11);
                                         if (bonfire == b) {
-                                            colour = 46339;
-                                            guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF777777);
+                                            //guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF777777);
+
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    if (mouseX >= getX() && mouseX <= getX() + width && mouseY >= getY() && mouseY <= getY() + height) {
-                        guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF777777);
+                    RenderSystem.enableBlend();
+                    RenderSystem.defaultBlendFunc();
+
+                    if (isHoveredOrFocused()) {
+                        guiGraphics.setColor(1, 1, 1, 1);
+                    } else {
+                        guiGraphics.setColor(0.88F, 0.88F, 0.88F, 1);
                     }
-                    parent.drawCenteredStringNoShadow(guiGraphics, fontrenderer, getMessage().getString(), this.getX() + width / 2, this.getY() + height / 2, colour);
+                    guiGraphics.blit(
+                            TEXTURE,
+                            getX(), getY(),
+                            getWidth(), getHeight(),
+                            0, 0,
+                            textureWidth, textureHeight,
+                            textureWidth, textureHeight
+                    );
+
+                    guiGraphics.setColor(1, 1, 1, 1);
+                    RenderSystem.disableBlend();
+                    parent.drawCenteredStringNoShadow(guiGraphics, fontrenderer, getMessage().getString(), this.getX() + width / 2, this.getY() + height / 2 + 1, colour);
                 }
             }
         } else {

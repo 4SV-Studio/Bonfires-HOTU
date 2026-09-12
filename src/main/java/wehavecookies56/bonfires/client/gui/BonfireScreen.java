@@ -395,7 +395,29 @@ public class BonfireScreen extends Screen {
             int nameX = (width / 2) - 10 + 12;
             int nameY = (height / 2) - 45;
             if (BonfiresConfig.Client.renderScreenshotsInGui && screenshotImage != null && screenshotImage.textureLocation() != null && !noScreenshot) {
-                guiGraphics.blit(screenshotImage.textureLocation(), nameX-3, nameY-5, (float) ScreenshotUtils.width /2, 0, ScreenshotUtils.width, ScreenshotUtils.height, ScreenshotUtils.width*2, ScreenshotUtils.height);
+                guiGraphics.pose().pushPose();
+                guiGraphics.pose().scale(0.5f, 0.5f, 1);
+
+                int width = ScreenshotUtils.width*2;
+                int height = ScreenshotUtils.height;
+
+                int cropWidth = (height * 4) / 3;
+
+                int cropX = (width - cropWidth) / 2;
+
+                guiGraphics.blit(
+                        screenshotImage.textureLocation(),
+                        (nameX + 7) * 2,
+                        (nameY - 5) * 2,
+                        cropX,
+                        0,
+                        cropWidth,
+                        height,
+                        width,
+                        height
+                );
+
+                guiGraphics.pose().popPose();
             }
 
             /*if (showInfo) {
@@ -581,7 +603,7 @@ public class BonfireScreen extends Screen {
                     }
                     screenshotImage.upload(NativeImage.read(new FileInputStream(screenshotFile)));
                     noScreenshot = false;
-                    info.visible = true;
+                    //info.visible = true;
                     info.active = true;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -602,11 +624,11 @@ public class BonfireScreen extends Screen {
             if (bonfireSelected >= BONFIRE1) {
                 travel.visible = true;
                 travel.active = selectedInstance != null && !selectedInstance.getId().equals(bonfire.getID());
-                info.visible = !noScreenshot;
+                //info.visible = !noScreenshot;
                 info.active = !noScreenshot;
                 if (BonfiresConfig.Client.renderScreenshotsInGui && selectedInstance != null) {
                     if (bonfire.getID().equals(selectedInstance.getId())) {
-                        screenshot.visible = true;
+                        //screenshot.visible = true;
                         screenshot.active = true;
                         if (noScreenshot) {
                             screenshot.setY((height / 2) - 50);
@@ -711,6 +733,9 @@ public class BonfireScreen extends Screen {
         addRenderableWidget(screenshot = new BonfireCustomButton(SCREENSHOT, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.SCREENSHOT, button -> action(SCREENSHOT)));
         addRenderableWidget(info = new BonfireCustomButton(INFO, selectedX + 16 + (103 - 16), selectedY, BonfireCustomButton.ButtonType.INFO, button -> action(INFO)));
 
+        screenshot.visible = false;
+        info.visible = false;
+
         addRenderableWidget(travel = new CButton(5, (height / 2) - (tex_height / 2) + 62, 124, 25, Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)));
         addRenderableWidget(leave = new CButton(5, (height / 2) - (tex_height / 2) + 25, 124, 25, Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)));
 
@@ -750,8 +775,8 @@ public class BonfireScreen extends Screen {
         }
         for (int i = 0; i < bonfireButtons.length; i++) {
             addRenderableWidget(bonfireButtons[i]);
-            bonfireButtons[i].setX((width / 2) - 88 - 12);
-            bonfireButtons[i].setY((height / 2) + (bonfireButtons[i].getHeight()) * i - 50);
+            bonfireButtons[i].setX((width / 2) - 80 - 12);
+            bonfireButtons[i].setY((height / 2) + (bonfireButtons[i].getHeight() + 5) * i - 45);
         }
         prev.setX(((width) / 2 - (travel_width / 2)) - 8);
         prev.setY((height / 2) - (travel_width / 2) + 6);
