@@ -91,6 +91,6 @@ public class ScreenshotUtils {
 
     @SubscribeEvent
     public static void renderOverlays(RenderGuiLayerEvent.Pre event) {
-        event.setCanceled(takingScreenshot);
+        event.setCanceled(takingScreenshot || Minecraft.getInstance().screen instanceof BonfireScreen);
     }
 }
