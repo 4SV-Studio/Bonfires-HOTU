@@ -58,6 +58,8 @@ public class Bonfires {
     public static Logger LOGGER = LogManager.getLogger();
     public static final String modid = "bonfires";
 
+    public static Bonfire dreamBonfire = null; // TODO: set it for dream dim somehow
+
     public static final ResourceLocation reinforceDamageModifier = ResourceLocation.fromNamespaceAndPath(modid, "reinforce_damagebonus");
 
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, Bonfires.modid);

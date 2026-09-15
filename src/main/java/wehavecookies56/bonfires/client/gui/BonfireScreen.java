@@ -62,7 +62,7 @@ public class BonfireScreen extends Screen {
     private Button next;
     private Button prev;
     private Button skill;
-    private Button dreamteleport;
+    private Button dream;
 
     public Map<ResourceKey<Level>, List<List<Bonfire>>> bonfires;
 
@@ -111,7 +111,6 @@ public class BonfireScreen extends Screen {
     private BonfireButton[] bonfireButtons;
     private BonfirePageButton bonfire_next;
     private BonfirePageButton bonfire_prev;
-    private DreamTeleport dream_teleport;
 
     private final int tex_height = 166;
     private final int travel_width = 195;
@@ -505,8 +504,7 @@ public class BonfireScreen extends Screen {
                 break;
             case SKILL:
                 onClose();
-
-                simulateKeyPress(InputConstants.KEY_F25); // "-"
+                // TODO: open skill screen
                 break;
 
             case NEXT:
@@ -571,7 +569,12 @@ public class BonfireScreen extends Screen {
                 minecraft.setScreen(new ReinforceScreen(this));
                 break;
             case DREAMTELEPORT:
-                
+                if (Bonfires.dreamBonfire != null) {
+                    selectedInstance = Bonfires.dreamBonfire;
+                }
+                if (BonfiresConfig.Client.renderScreenshotsInGui) {
+                    loadBonfireScreenshot();
+                }
                 break;
         }
         updateButtons();
@@ -579,18 +582,6 @@ public class BonfireScreen extends Screen {
             PacketHandler.sendToServer(new RequestDimensionsFromServer());
         }
     }
-
-    private void simulateKeyPress(int key) {
-        long windowHandle = Minecraft.getInstance().getWindow().getWindow();
-
-        InputConstants.Key inputKey = InputConstants.Type.KEYSYM.getOrCreate(key);
-
-        GLFW.glfwPostEmptyEvent();
-        Minecraft.getInstance().keyboardHandler.keyPress(windowHandle, inputKey.getValue(), 0, GLFW.GLFW_PRESS, 0);
-
-        Minecraft.getInstance().keyboardHandler.keyPress(windowHandle, inputKey.getValue(), 0, GLFW.GLFW_RELEASE, 0);
-    }
-
 
     public void loadBonfireScreenshot() {
         if (selectedInstance != null) {
@@ -671,7 +662,8 @@ public class BonfireScreen extends Screen {
             }
             leave.visible = false;
             travel.visible = false;
-            //dreamteleport.visible = false;
+            dream.visible = false;
+            skill.visible = false;
             next.visible = true;
             prev.visible = true;
             bonfire_prev.visible = true;
@@ -696,7 +688,8 @@ public class BonfireScreen extends Screen {
                 }
             }
             leave.visible = true;
-            //dreamteleport.visible = false;
+            dream.visible = false;
+            skill.visible = true;
             next.visible = false;
             prev.visible = false;
             prev.active = false;
@@ -738,11 +731,11 @@ public class BonfireScreen extends Screen {
 
         addRenderableWidget(travel = new CButton(5, (height / 2) - (tex_height / 2) + 62, 124, 25, Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)));
         addRenderableWidget(leave = new CButton(5, (height / 2) - (tex_height / 2) + 25, 124, 25, Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)));
-
         addRenderableWidget(skill = Button.builder(Component.translatable(LocalStrings.BUTTON_SKILL), button -> action(SKILL, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62 + 21).size(80, 20).build());
+
         addRenderableWidget(reinforce = Button.builder(Component.translatable(LocalStrings.BUTTON_REINFORCE), button -> action(REINFORCE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 41).size(80, 20).build());
 
-        skill.visible = false;
+        skill.visible = true;
         reinforce.visible = false;
 
         addRenderableWidget(next = Button.builder(Component.literal(">"), button -> action(NEXT)).pos(0, 0).size(20, 20).build());

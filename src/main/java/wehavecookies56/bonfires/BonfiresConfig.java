@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("removal")
 @EventBusSubscriber(modid = Bonfires.modid, bus = EventBusSubscriber.Bus.MOD)
 public class BonfiresConfig {
 
@@ -22,7 +23,6 @@ public class BonfiresConfig {
         public final ModConfigSpec.ConfigValue<List<? extends String>> tabIconsConfig;
 
         public static boolean renderScreenshotsInGui = true;
-        public final ModConfigSpec.BooleanValue renderScreenshotsInGuiConfig;
 
         public static boolean enableAutomaticScreenshotOnCreation = true;
         public final ModConfigSpec.BooleanValue enableAutomaticScreenshotOnCreationConfig;
@@ -42,7 +42,6 @@ public class BonfiresConfig {
         public Client(ModConfigSpec.Builder builder) {
             this.renderTextAboveBonfireConfig = builder.comment("Whether to Render the name of the Bonfire above the Bonfire, default:true").define("Render Text Above Bonfire", renderTextAboveBonfire);
             this.tabIconsConfig = builder.comment("Set the icons to display for the dimension tabs in the Bonfire GUI, mod:dimensionname=mod:itemname").defineList("Bonfire Dimension Tab Icons", tabIcons, input -> validateIcon((String) input));
-            this.renderScreenshotsInGuiConfig = builder.comment("Whether to render screenshots of the Bonfires in the Bonfire GUI, default:true").define("Render Screenshots in GUI", renderScreenshotsInGui);
             this.enableAutomaticScreenshotOnCreationConfig = builder.comment("Enables creating a screenshot of a Bonfire when it is created, default:true").define("Enable Automatic Screenshot on Creation", enableAutomaticScreenshotOnCreation);
             this.deleteScreenshotsOnDestroyedConfig = builder.comment("Whether to delete Bonfire screenshots when the Bonfire is destroyed, default:true").define("Delete Screenshots on Destroyed", deleteScreenshotsOnDestroyed);
             this.hiddenDimensionsConfig = builder.comment("List of dimensions to hide from the Bonfire GUI useful if you can't place a bonfire in the dimension, mod:dimensionname").defineList("Hidden Dimensions in GUI", hiddenDimensions, input -> ((String)input).contains(":"));
@@ -147,7 +146,6 @@ public class BonfiresConfig {
         if (event.getConfig().getSpec() == CLIENT_SPEC) {
             Client.renderTextAboveBonfire = CLIENT.renderTextAboveBonfireConfig.get();
             Client.tabIcons = (List<String>) CLIENT.tabIconsConfig.get();
-            Client.renderScreenshotsInGui = CLIENT.renderScreenshotsInGuiConfig.get();
             Client.enableAutomaticScreenshotOnCreation = CLIENT.enableAutomaticScreenshotOnCreationConfig.get();
             Client.deleteScreenshotsOnDestroyed = CLIENT.deleteScreenshotsOnDestroyedConfig.get();
             Client.hiddenDimensions = (List<String>) CLIENT.hiddenDimensionsConfig.get();
