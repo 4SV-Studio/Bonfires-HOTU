@@ -731,7 +731,7 @@ public class BonfireScreen extends Screen {
 
         addRenderableWidget(travel = new CButton(5, (height / 2) - (tex_height / 2) + 62, 124, 25, Component.translatable(LocalStrings.BUTTON_TRAVEL), button -> action(TRAVEL)));
         addRenderableWidget(leave = new CButton(5, (height / 2) - (tex_height / 2) + 25, 124, 25, Component.translatable(LocalStrings.BUTTON_LEAVE), button -> action(LEAVE, true)));
-        addRenderableWidget(skill = Button.builder(Component.translatable(LocalStrings.BUTTON_SKILL), button -> action(SKILL, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62 + 21).size(80, 20).build());
+        addRenderableWidget(skill = new CButton((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 62 + 21, 80, 20, Component.translatable(LocalStrings.BUTTON_SKILL), button -> action(SKILL, true)));
 
         addRenderableWidget(reinforce = Button.builder(Component.translatable(LocalStrings.BUTTON_REINFORCE), button -> action(REINFORCE, true)).pos((width / 4) - (80 / 2), (height / 2) - (tex_height / 2) + 41).size(80, 20).build());
 
