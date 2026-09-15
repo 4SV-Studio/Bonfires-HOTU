@@ -738,8 +738,9 @@ public class BonfireScreen extends Screen {
         skill.visible = true;
         reinforce.visible = false;
 
-        addRenderableWidget(next = Button.builder(Component.literal(">"), button -> action(NEXT)).pos(0, 0).size(20, 20).build());
-        addRenderableWidget(prev = Button.builder(Component.literal("<"), button -> action(PREV)).pos(20, 0).size(20, 20).build());
+        addRenderableWidget(next = new BonfirePageButton(this, NEXT, 0, 0, true));
+        addRenderableWidget(prev = new BonfirePageButton(this, PREV, 20, 0, false));
+
         addRenderableWidget(bonfire_next = new BonfirePageButton(this, BONFIRE_NEXT, 0, 0, true));
         addRenderableWidget(bonfire_prev = new BonfirePageButton(this, BONFIRE_PREV, 8, 0, false));
         tabs = new DimensionTabButton[] {
